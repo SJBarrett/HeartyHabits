@@ -18,8 +18,8 @@ angular.module('starter', ['ionic'])
     function preload() {
 
         game.load.image('background','assets/debug-grid-1920x1920.png');
-        game.load.image('player','assets/sprites/phaser-dude.png');
-
+        // game.load.image('player','assets/sprites/phaser-dude.png');
+        this.load.spritesheet('player', 'img/george.png', 40, 50, 16);
     }
 
     var player;
@@ -32,7 +32,15 @@ angular.module('starter', ['ionic'])
         game.add.tileSprite(0, 0, 1920, 1920, 'background');
         game.world.setBounds(0, 0, 1920, 1920);
         game.physics.startSystem(Phaser.Physics.ARCADE);
+
+
         player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
+
+        this.walk = player.animations.add('walk', [0, 4, 8, 12])
+        this.left = player.animations.add('left', [1, 5, 9, 13])
+        this.up = player.animations.add('up', [2, 6, 7, 14])
+        this.right = player.animations.add('right', [3, 6, 7, 15])
+
         game.physics.arcade.enable(player);
         player.body.fixedRotation = true;
         cursors = game.input.keyboard.createCursorKeys();
@@ -43,6 +51,7 @@ angular.module('starter', ['ionic'])
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
         game.input.onDown.add(movePlayer, this);
+
     }
 
     function movePlayer(){
@@ -54,12 +63,13 @@ angular.module('starter', ['ionic'])
       if(game.physics.arcade.distanceToPointer(player) < 50){
         player.body.velocity.setTo(0,0);
       }
+
+      //Creates an animation
+      player.animations.play('walk', 5);
     }
 
     function render() {
-
         game.debug.cameraInfo(game.camera, 32, 32);
-
     }
 
 
