@@ -49,19 +49,29 @@ angular.module('starter', ['ionic'])
         //  0.1 is the amount of linear interpolation to use.
         //  The smaller the value, the smooth the camera (and the longer it takes to catch up)
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+<<<<<<< HEAD
 
         game.input.onDown.add(movePlayer, this);
 
-    }
-
-    function movePlayer(){
-      game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
-      game.physics.arcade.moveToXY(player, game.input.activePointer.x, game.input.activePointer.y, 100);
+=======
+>>>>>>> 0de84f2f124ce9c6dcbd8dd31a35b175699aae51
     }
 
     function update() {
-      if(game.physics.arcade.distanceToPointer(player) < 50){
+      game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+
+      if(game.input.activePointer.isDown){
+        console.log("Pointer (" + (game.input.activePointer.positionDown.x + game.camera.x)+ "," + (game.input.activePointer.positionDown.y + game.camera.y) + ")");
+        clickX = game.input.activePointer.positionDown.x + game.camera.x;
+        clickY = game.input.activePointer.positionDown.y + game.camera.y;
+        console.log("Player (" + player.position.x + "," + player.position.y + ")");
+        console.log("DISTANCE: " + Math.sqrt((player.position.x - clickX)*(player.position.x - clickX) + (player.position.y - clickY)*(player.position.y - clickY)));
+        game.physics.arcade.moveToXY(player, clickX, clickY, 100);
+      }
+      var distance = Math.sqrt((player.position.x - clickX)*(player.position.x - clickX) + (player.position.y - clickY)*(player.position.y - clickY));
+      if(distance < 5) {
         player.body.velocity.setTo(0,0);
+        console.log("ARRIVED");
       }
 
       //Creates an animation
