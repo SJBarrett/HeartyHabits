@@ -3,10 +3,21 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic'])
+angular.module('starter', ['ionic','firebase'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
+
+    var config = {
+     apiKey: "AIzaSyBWc3hKNxyfjQd59up3GtAxVe6etF4XZAU",
+     authDomain: "hearty-bf306.firebaseapp.com",
+     databaseURL: "https://hearty-bf306.firebaseio.com",
+     projectId: "hearty-bf306",
+     storageBucket: "hearty-bf306.appspot.com",
+     messagingSenderId: "1015399047405"
+    };
+
+    firebase.initializeApp(config);
 
     scaleRatio = window.devicePixelRatio / 3;
 
