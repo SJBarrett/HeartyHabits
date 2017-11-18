@@ -129,7 +129,7 @@ angular.module('starter', ['ionic','firebase'])
         bee.y -= 1;
         bee.animations.play('upBee', 3);
       }
-      
+
       if(moveDirection == 0){
         player.animations.play('up', 5);
       } else if (moveDirection == 1) {
