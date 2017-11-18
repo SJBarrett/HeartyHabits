@@ -4,8 +4,59 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
 
+<<<<<<< HEAD
 .run(function($ionicPlatform, $rootScope, $ionicPopup, $geolocation, $ionicLoading) {
     $ionicPlatform.ready(function() {
+=======
+.run(function($ionicPlatform, $rootScope, $ionicPopup, $geolocation, $firebaseObject) {
+  $ionicPlatform.ready(function() {
+
+    // Set up database connection
+    var config = {
+     apiKey: "AIzaSyBWc3hKNxyfjQd59up3GtAxVe6etF4XZAU",
+     authDomain: "hearty-bf306.firebaseapp.com",
+     databaseURL: "https://hearty-bf306.firebaseio.com",
+     projectId: "hearty-bf306",
+     storageBucket: "hearty-bf306.appspot.com",
+     messagingSenderId: "1015399047405"
+    };
+    firebase.initializeApp(config);
+    var ref = firebase.database().ref();
+    $rootScope.data = $firebaseObject(ref);
+    /*  Print out database info to console Log
+    $rootScope.data.$loaded().then(function() {
+      console.log($rootScope.data);
+      }).catch(function(err) {
+        console.error(err);
+      });
+      */
+    scaleRatio = window.devicePixelRatio / 3;
+
+    //Create a new game instance and assign it to the 'gameArea' div
+    var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.CANVAS, 'gameArea', { preload: preload, create: create, update: update, render: render });
+
+    // var game = new Phaser.Game(window.innerWidth*window.devicePixelRatio, (window.innerHeight*window.devicePixelRatio) - 45 * window.devicePixelRatio, Phaser.CANVAS, 'gameArea', { preload: preload, create: create, update: update, render: render });
+
+    function preload() {
+
+        game.load.image('background','img/grass.png');
+        game.load.image('shrub', 'img/shrub.png');
+        game.load.image('pineTree','img/tree1.png');
+        game.load.image('palmTree', 'img/tree2.png');
+        game.load.image('basicTree', 'img/tree3.png');
+        // game.load.image('player','assets/sprites/phaser-dude.png');
+
+        this.load.spritesheet('gameSprite', 'img/roguelikeSheet_transparent.png', 16, 16, 1736, 0, 1);
+        this.load.spritesheet('player', 'img/george.png', 48, 48, 16);
+        this.load.spritesheet('bee', 'img/bee.png', 60, 65, 11);
+    }
+
+    var player;
+    var cursors;
+    var clickX;
+    var clickY;
+    var moveDirection; // 0 up, 1 right, 2 down, 3 left
+>>>>>>> 8a784c87b7fcd81a83f8662f27bae151ee8417c8
 
         var config = {
             apiKey: "AIzaSyBWc3hKNxyfjQd59up3GtAxVe6etF4XZAU",
@@ -18,7 +69,16 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
 
         firebase.initializeApp(config);
 
+<<<<<<< HEAD
         scaleRatio = window.devicePixelRatio / 3;
+=======
+        /*
+        var test = game.add.sprite(game.world.centerX - 100,game.world.centerY - 100, 'shrub');
+        var test2 = game.add.sprite(game.world.centerX + 100,game.world.centerY + 100, 'pineTree');
+        var test3 = game.add.sprite(game.world.centerX - 100,game.world.centerY + 100, 'palmTree');
+        var test3 = game.add.sprite(game.world.centerX + 100,game.world.centerY - 100, 'basicTree');
+        */
+>>>>>>> 8a784c87b7fcd81a83f8662f27bae151ee8417c8
 
         //Create a new game instance and assign it to the 'gameArea' div
         var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.CANVAS, 'gameArea', {
@@ -28,8 +88,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
             render: render
         });
 
-        // var game = new Phaser.Game(window.innerWidth*window.devicePixelRatio, (window.innerHeight*window.devicePixelRatio) - 45 * window.devicePixelRatio, Phaser.CANVAS, 'gameArea', { preload: preload, create: create, update: update, render: render });
 
+        randomBeePosX = Math.random() * (game.world.centerX + 300 - (game.world.centerX-300)) + (game.world.centerX-300);
+        randomBeePosY = Math.random() * (game.world.centerY + 300 - (game.world.centerY-300)) + (game.world.centerY-300);
         function preload() {
 
             game.load.image('background', 'img/grass.png');
@@ -41,6 +102,32 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
 
             this.load.image('heart', 'img/heart.png');
         }
+
+        var trees = [];
+        for ( i = 0; i < 10; i++){
+          treePosX = Math.random() * (game.world.centerX + 500 - (game.world.centerX - 500)) + (game.world.centerX - 500);
+          treePosY = Math.random() * (game.world.centerY + 500 - (game.world.centerY - 500)) + (game.world.centerY - 500);
+          type = Math.floor(Math.random() * 4);
+          if (type == 0){
+            trees[i] = game.add.sprite(treePosX, treePosY, 'shrub');
+          } else if (type == 1){
+            trees[i] = game.add.sprite(treePosX, treePosY, 'pineTree');
+          } else if (type == 2){
+            trees[i] = game.add.sprite(treePosX, treePosY, 'palmTree');
+          } else {
+            trees[i] = game.add.sprite(treePosX, treePosY, 'basicTree');
+          }
+        }
+
+        game.physics.arcade.enable(player);
+        player.body.fixedRotation = true;
+        cursors = game.input.keyboard.createCursorKeys();
+        //  Notice that the sprite doesn't have any momentum at all,
+        //  it's all just set by the camera follow type.
+        //  0.1 is the amount of linear interpolation to use.
+        //  The smaller the value, the smooth the camera (and the longer it takes to catch up)
+        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+
 
         var player;
         var cursors;
