@@ -59,11 +59,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
         game.add.tileSprite(0, 0, 1920, 1920, 'background');
         game.world.setBounds(0, 0, 1920, 1920);
         game.physics.startSystem(Phaser.Physics.ARCADE);
+
+        /*
         var test = game.add.sprite(game.world.centerX - 100,game.world.centerY - 100, 'shrub');
         var test2 = game.add.sprite(game.world.centerX + 100,game.world.centerY + 100, 'pineTree');
         var test3 = game.add.sprite(game.world.centerX - 100,game.world.centerY + 100, 'palmTree');
         var test3 = game.add.sprite(game.world.centerX + 100,game.world.centerY - 100, 'basicTree');
-
+        */
 
         player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
         player.anchor.setTo(0.5, 0.5);
@@ -94,6 +96,22 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
         this.rightBee = bee.animations.add('rightBee', [6, 7, 8])
         this.upBee = bee.animations.add('upBee', [9, 10, 11])
 
+        var trees = [];
+        for ( i = 0; i < 10; i++){
+          treePosX = Math.random() * (game.world.centerX + 500 - (game.world.centerX - 500)) + (game.world.centerX - 500);
+          treePosY = Math.random() * (game.world.centerY + 500 - (game.world.centerY - 500)) + (game.world.centerY - 500);
+          type = Math.floor(Math.random() * 4);
+          if (type == 0){
+            trees[i] = game.add.sprite(treePosX, treePosY, 'shrub');
+          } else if (type == 1){
+            trees[i] = game.add.sprite(treePosX, treePosY, 'pineTree');
+          } else if (type == 2){
+            trees[i] = game.add.sprite(treePosX, treePosY, 'palmTree');
+          } else {
+            trees[i] = game.add.sprite(treePosX, treePosY, 'basicTree');
+          }
+        }
+        
         game.physics.arcade.enable(player);
         player.body.fixedRotation = true;
         cursors = game.input.keyboard.createCursorKeys();
