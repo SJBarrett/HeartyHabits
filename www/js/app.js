@@ -30,7 +30,7 @@ angular.module('starter', ['ionic','firebase'])
 
         game.load.image('background','img/grass.png');
         // game.load.image('player','assets/sprites/phaser-dude.png');
-        this.load.spritesheet('player', 'img/george.png', 40, 50, 16);
+        this.load.spritesheet('player', 'img/george.png', 48, 48, 16);
         this.load.spritesheet('bee', 'img/bee.png', 60, 65, 11);
     }
 
@@ -38,6 +38,7 @@ angular.module('starter', ['ionic','firebase'])
     var cursors;
     var clickX;
     var clickY;
+    var moveDirection; // 0 up, 1 right, 2 down, 3 left
 
     function create() {
 
@@ -53,11 +54,11 @@ angular.module('starter', ['ionic','firebase'])
 
         bee = game.add.sprite(game.world.centerX, game.world.centerY, 'bee');
         bee.anchor.setTo(0.5, 0.5);
-
+        player.anchor.setTo(0.5, 0.5);
         this.walk = player.animations.add('walk', [0, 4, 8, 12])
         this.left = player.animations.add('left', [1, 5, 9, 13])
-        this.up = player.animations.add('up', [2, 6, 7, 14])
-        this.right = player.animations.add('right', [3, 6, 7, 15])
+        this.up = player.animations.add('up', [2, 6, 10, 14])
+        this.right = player.animations.add('right', [3, 7, 11, 15])
 
         this.walkBee = bee.animations.add('walkBee', [0, 1, 2])
         this.leftBee = bee.animations.add('leftBee', [3, 4, 5])
@@ -84,6 +85,23 @@ angular.module('starter', ['ionic','firebase'])
         clickX = game.input.activePointer.positionDown.x + game.camera.x;
         clickY = game.input.activePointer.positionDown.y + game.camera.y;
         game.physics.arcade.moveToXY(player, clickX, clickY, 100);
+        var distX = clickX - player.position.x;
+        var distY = clickY - player.position.y;
+        // moving left or right
+        if(Math.abs(distX) > Math.abs(distY)){
+          if(distX > 0){
+            moveDirection = 1;
+          } else {
+            moveDirection = 3;
+          }
+        } else {
+          if(distY > 0){
+            moveDirection = 2;
+          } else {
+            moveDirection = 0;
+          }
+        }
+
       }
 
       var distance = Math.sqrt((player.position.x - clickX)*(player.position.x - clickX) + (player.position.y - clickY)*(player.position.y - clickY));
@@ -109,6 +127,16 @@ angular.module('starter', ['ionic','firebase'])
       }else if($rootScope.moveNum == 4){
         bee.y -= 1;
         bee.animations.play('upBee', 3);
+      }
+      
+      if(moveDirection == 0){
+        player.animations.play('up', 5);
+      } else if (moveDirection == 1) {
+        player.animations.play('right', 5);
+      } else if (moveDirection == 2) {
+        player.animations.play('walk', 5);
+      } else {
+        player.animations.play('left', 5);
       }
 
     }
