@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('starter', ['ionic','firebase'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope) {
   $ionicPlatform.ready(function() {
 
     var config = {
@@ -28,9 +28,10 @@ angular.module('starter', ['ionic','firebase'])
 
     function preload() {
 
-        game.load.image('background','assets/debug-grid-1920x1920.png');
+        game.load.image('background','img/grass.png');
         // game.load.image('player','assets/sprites/phaser-dude.png');
         this.load.spritesheet('player', 'img/george.png', 40, 50, 16);
+        this.load.spritesheet('bee', 'img/bee.png', 60, 65, 11);
     }
 
     var player;
@@ -47,10 +48,21 @@ angular.module('starter', ['ionic','firebase'])
 
         player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
 
+        randomBeePosX = Math.random() * (window.innerWidth - 1) + 1;
+        randomBeePosY = Math.random() * (window.innerWidth - 1) + 1;
+
+        bee = game.add.sprite(game.world.centerX, game.world.centerY, 'bee');
+        bee.anchor.setTo(0.5, 0.5);
+
         this.walk = player.animations.add('walk', [0, 4, 8, 12])
         this.left = player.animations.add('left', [1, 5, 9, 13])
         this.up = player.animations.add('up', [2, 6, 7, 14])
         this.right = player.animations.add('right', [3, 6, 7, 15])
+
+        this.walkBee = bee.animations.add('walkBee', [0, 1, 2])
+        this.leftBee = bee.animations.add('leftBee', [3, 4, 5])
+        this.rightBee = bee.animations.add('rightBee', [6, 7, 8])
+        this.upBee = bee.animations.add('upBee', [9, 10, 11])
 
         game.physics.arcade.enable(player);
         player.body.fixedRotation = true;
@@ -61,6 +73,8 @@ angular.module('starter', ['ionic','firebase'])
         //  The smaller the value, the smooth the camera (and the longer it takes to catch up)
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
+
+        moveEveryone();
     }
 
     function update() {
@@ -71,21 +85,42 @@ angular.module('starter', ['ionic','firebase'])
         clickY = game.input.activePointer.positionDown.y + game.camera.y;
         game.physics.arcade.moveToXY(player, clickX, clickY, 100);
       }
+
       var distance = Math.sqrt((player.position.x - clickX)*(player.position.x - clickX) + (player.position.y - clickY)*(player.position.y - clickY));
 
       if(distance < 5) {
         player.body.velocity.setTo(0,0);
       }
 
+
       if(player.body.velocity < 50){
-        player.animations.play('walk', 5);
+        player.animations.play('walk', 4);
       }
+
+      if($rootScope.moveNum == 1){
+        bee.x -= 1;
+        bee.animations.play('leftBee', 3);
+      }else if($rootScope.moveNum == 2){
+        bee.x += 1;
+        bee.animations.play('rightBee', 3);
+      }else if($rootScope.moveNum == 3){
+        bee.y += 1;
+        bee.animations.play('walkBee', 3);
+      }else if($rootScope.moveNum == 4){
+        bee.y -= 1;
+        bee.animations.play('upBee', 3);
+      }
+
     }
 
     function render() {
-        game.debug.cameraInfo(game.camera, 32, 32);
+        // game.debug.cameraInfo(game.camera, 32, 32);
     }
 
+    function moveEveryone(){
+        $rootScope.moveNum = Math.floor(Math.random() * (5 - 1) + 1);
+        setTimeout(moveEveryone, 3000);
+    }
 
     if(window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
