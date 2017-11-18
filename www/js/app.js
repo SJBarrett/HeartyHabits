@@ -30,9 +30,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
 
         game.load.image('background','img/grass.png');
         // game.load.image('player','assets/sprites/phaser-dude.png');
+
+        this.load.spritesheet('gameSprite', 'img/roguelikeSheet_transparent.png', 16, 16, 1736, 0, 1);
         this.load.spritesheet('player', 'img/george.png', 48, 48, 16);
         this.load.spritesheet('bee', 'img/bee.png', 60, 65, 11);
-
     }
 
     var player;
