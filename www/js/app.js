@@ -30,13 +30,14 @@ angular.module('starter', ['ionic','firebase'])
 
         game.load.image('background','assets/debug-grid-1920x1920.png');
         // game.load.image('player','assets/sprites/phaser-dude.png');
-        this.load.spritesheet('player', 'img/george.png', 40, 50, 16);
+        this.load.spritesheet('player', 'img/george.png', 48, 48, 16);
     }
 
     var player;
     var cursors;
     var clickX;
     var clickY;
+    var moveDirection; // 0 up, 1 right, 2 down, 3 left
 
     function create() {
 
@@ -46,11 +47,11 @@ angular.module('starter', ['ionic','firebase'])
 
 
         player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
-
+        player.anchor.setTo(0.5, 0.5);
         this.walk = player.animations.add('walk', [0, 4, 8, 12])
         this.left = player.animations.add('left', [1, 5, 9, 13])
-        this.up = player.animations.add('up', [2, 6, 7, 14])
-        this.right = player.animations.add('right', [3, 6, 7, 15])
+        this.up = player.animations.add('up', [2, 6, 10, 14])
+        this.right = player.animations.add('right', [3, 7, 11, 15])
 
         game.physics.arcade.enable(player);
         player.body.fixedRotation = true;
@@ -70,6 +71,23 @@ angular.module('starter', ['ionic','firebase'])
         clickX = game.input.activePointer.positionDown.x + game.camera.x;
         clickY = game.input.activePointer.positionDown.y + game.camera.y;
         game.physics.arcade.moveToXY(player, clickX, clickY, 100);
+        var distX = clickX - player.position.x;
+        var distY = clickY - player.position.y;
+        // moving left or right
+        if(Math.abs(distX) > Math.abs(distY)){
+          if(distX > 0){
+            moveDirection = 1;
+          } else {
+            moveDirection = 3;
+          }
+        } else {
+          if(distY > 0){
+            moveDirection = 2;
+          } else {
+            moveDirection = 0;
+          }
+        }
+
       }
       var distance = Math.sqrt((player.position.x - clickX)*(player.position.x - clickX) + (player.position.y - clickY)*(player.position.y - clickY));
 
@@ -77,9 +95,16 @@ angular.module('starter', ['ionic','firebase'])
         player.body.velocity.setTo(0,0);
       }
 
-      if(player.body.velocity < 50){
+      if(moveDirection == 0){
+        player.animations.play('up', 5);
+      } else if (moveDirection == 1) {
+        player.animations.play('right', 5);
+      } else if (moveDirection == 2) {
         player.animations.play('walk', 5);
+      } else {
+        player.animations.play('left', 5);
       }
+
     }
 
     function render() {
