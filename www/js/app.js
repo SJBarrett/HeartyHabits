@@ -31,6 +31,7 @@ angular.module('starter', ['ionic','firebase'])
         game.load.image('background','assets/debug-grid-1920x1920.png');
         // game.load.image('player','assets/sprites/phaser-dude.png');
         this.load.spritesheet('player', 'img/george.png', 40, 50, 16);
+        this.load.spritesheet('gameSprite', 'img/roguelikeSheet_transparent.png', 16, 16, 1736, 0, 1);
     }
 
     var player;
