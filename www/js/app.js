@@ -37,6 +37,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
     function preload() {
 
         game.load.image('background','img/grass.png');
+        game.load.image('shrub', 'img/shrub.png');
+        game.load.image('pineTree','img/tree1.png');
+        game.load.image('palmTree', 'img/tree2.png');
+        game.load.image('basicTree', 'img/tree3.png');
         // game.load.image('player','assets/sprites/phaser-dude.png');
 
         this.load.spritesheet('gameSprite', 'img/roguelikeSheet_transparent.png', 16, 16, 1736, 0, 1);
@@ -55,6 +59,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
         game.add.tileSprite(0, 0, 1920, 1920, 'background');
         game.world.setBounds(0, 0, 1920, 1920);
         game.physics.startSystem(Phaser.Physics.ARCADE);
+        var test = game.add.sprite(game.world.centerX - 100,game.world.centerY - 100, 'shrub');
+        var test2 = game.add.sprite(game.world.centerX + 100,game.world.centerY + 100, 'pineTree');
+        var test3 = game.add.sprite(game.world.centerX - 100,game.world.centerY + 100, 'palmTree');
+        var test3 = game.add.sprite(game.world.centerX + 100,game.world.centerY - 100, 'basicTree');
 
 
         player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
