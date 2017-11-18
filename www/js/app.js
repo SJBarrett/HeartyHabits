@@ -5,9 +5,10 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('starter', ['ionic','firebase'])
 
-.run(function($ionicPlatform, $rootScope) {
+.run(function($ionicPlatform, $rootScope, $firebaseObject) {
   $ionicPlatform.ready(function() {
 
+    // Set up database connection
     var config = {
      apiKey: "AIzaSyBWc3hKNxyfjQd59up3GtAxVe6etF4XZAU",
      authDomain: "hearty-bf306.firebaseapp.com",
@@ -16,9 +17,16 @@ angular.module('starter', ['ionic','firebase'])
      storageBucket: "hearty-bf306.appspot.com",
      messagingSenderId: "1015399047405"
     };
-
     firebase.initializeApp(config);
-
+    var ref = firebase.database().ref();
+    $rootScope.data = $firebaseObject(ref);
+    /*  Print out database info to console Log
+    $rootScope.data.$loaded().then(function() {
+      console.log($rootScope.data);
+      }).catch(function(err) {
+        console.error(err);
+      });
+      */
     scaleRatio = window.devicePixelRatio / 3;
 
     //Create a new game instance and assign it to the 'gameArea' div
@@ -30,13 +38,9 @@ angular.module('starter', ['ionic','firebase'])
 
         game.load.image('background','img/grass.png');
         // game.load.image('player','assets/sprites/phaser-dude.png');
-<<<<<<< HEAD
-        this.load.spritesheet('player', 'img/george.png', 40, 50, 16);
-        this.load.spritesheet('gameSprite', 'img/roguelikeSheet_transparent.png', 16, 16, 1736, 0, 1);
-=======
         this.load.spritesheet('player', 'img/george.png', 48, 48, 16);
         this.load.spritesheet('bee', 'img/bee.png', 60, 65, 11);
->>>>>>> 1c5e9a24c03de93e10887bddc70e228af301aaa5
+        this.load.spritesheet('Tiles', 'img/roguelikeSheet_transparent.png', 16, 16, 1736, 1, 1);
     }
 
     var player;
@@ -56,6 +60,11 @@ angular.module('starter', ['ionic','firebase'])
 
         randomBeePosX = Math.random() * (window.innerWidth - 1) + 1;
         randomBeePosY = Math.random() * (window.innerWidth - 1) + 1;
+        /* TEST FOR ADDING RANDOM TILE
+        var testTile = game.add.sprite(game.world.centerX + 5, game.world.centerY + 5, 'Tiles');
+        testTile.frame = 1693;
+        */
+
 
         bee = game.add.sprite(game.world.centerX, game.world.centerY, 'bee');
         bee.anchor.setTo(0.5, 0.5);
