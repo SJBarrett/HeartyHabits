@@ -93,6 +93,7 @@ angular.module('starter', ['ionic','firebase'])
 
       if(distance < 5) {
         player.body.velocity.setTo(0,0);
+        player.animations.stop(null, true);
       }
 
       if(moveDirection == 0){
