@@ -21,7 +21,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
       var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.CANVAS, 'gameArea', { preload: preload, create: create, update: update, render: render });
 
       function preload() {
-          game.load.image('background','img/grass.png');
+          game.load.image('background','assets/platformerMap.png');
           game.load.image('shrub', 'img/shrub.png');
           game.load.image('pineTree','img/tree1.png');
           game.load.image('palmTree', 'img/tree2.png');
@@ -31,6 +31,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
           this.load.spritesheet('gameSprite', 'img/roguelikeSheet_transparent.png', 16, 16, 1736, 0, 1);
           this.load.spritesheet('player', 'img/george.png', 48, 48, 16);
           this.load.spritesheet('bee', 'img/bee.png', 60, 65, 11);
+
+          this.load.spritesheet('cakethulhu', 'assets/Cakethulhu.png', 128, 141);
+
+          this.load.spritesheet('player', 'assets/platformer/spritesheet.png', 72, 97, 11);
         }
 
         var player;
@@ -39,11 +43,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
         var clickY;
         var moveDirection;
 
+        var inBattle = false;
+
         function create() {
 
-            game.add.tileSprite(0, 0, 1920, 1920, 'background');
-            game.world.setBounds(0, 0, 1920, 1920);
-            game.physics.startSystem(Phaser.Physics.ARCADE);
+          game.add.tileSprite(0, 210, 5250, 1050, 'background');
+          game.world.setBounds(0, 0, 5250, 1050);
+          game.physics.startSystem(Phaser.Physics.ARCADE);
+          game.world.scale.setTo(0.5,0.5);
+          game.stage.backgroundColor = "#87b5ff";
 
             this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
             this.scale.maxWidth = this.game.width;
@@ -60,9 +68,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
 
 
 
-            player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
+            player = game.add.sprite(game.world.centerX, 700, 'player');
             player.anchor.setTo(0.5, 0.5);
-            player.scale.set(1.5);
             player.enableBody = true;
             player.collideWorldBounds = true;
             this.physics.enable(player, Phaser.Physics.ARCADE);
@@ -82,22 +89,21 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
             randomBeePosX = Math.random() * (game.world.centerX + 300 - (game.world.centerX - 300)) + (game.world.centerX - 300);
             randomBeePosY = Math.random() * (game.world.centerY + 300 - (game.world.centerY - 300)) + (game.world.centerY - 300);
 
-            bee = game.add.sprite(randomBeePosX, randomBeePosY, 'bee');
+            bee = game.add.sprite(player.x + 200, player.y, 'cakethulhu');
             bee.anchor.setTo(0.5, 0.5);
-            bee.scale.set(1.5);
             bee.enableBody = true;
             bee.collideWorldBounds = true;
             this.physics.enable(bee, Phaser.Physics.ARCADE);
 
-            this.walk = player.animations.add('walk', [0, 4, 8, 12])
-            this.left = player.animations.add('left', [1, 5, 9, 13])
-            this.up = player.animations.add('up', [2, 6, 10, 14])
-            this.right = player.animations.add('right', [3, 7, 11, 15])
-
-            this.walkBee = bee.animations.add('walkBee', [0, 1, 2])
-            this.leftBee = bee.animations.add('leftBee', [3, 4, 5])
-            this.rightBee = bee.animations.add('rightBee', [6, 7, 8])
-            this.upBee = bee.animations.add('upBee', [9, 10, 11])
+            this.walk = player.animations.add('walk', [0,1,2,3,4,5,6,7,8,9,10]);
+            // this.left = player.animations.add('left', [1, 5, 9, 13])
+            // this.up = player.animations.add('up', [2, 6, 10, 14])
+            // this.right = player.animations.add('right', [3, 7, 11, 15])
+            //
+            // this.walkBee = bee.animations.add('walkBee', [0, 1, 2])
+            // this.leftBee = bee.animations.add('leftBee', [3, 4, 5])
+            // this.rightBee = bee.animations.add('rightBee', [6, 7, 8])
+            // this.upBee = bee.animations.add('upBee', [9, 10, 11])
 
             game.physics.arcade.enable(player);
             player.body.fixedRotation = true;
@@ -295,13 +301,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
             }
 
             if (moveDirection == 0) {
-                player.animations.play('up', 5);
+                player.animations.play('walk', 5);
             } else if (moveDirection == 1) {
-                player.animations.play('right', 5);
+                player.animations.play('walk', 5);
             } else if (moveDirection == 2) {
                 player.animations.play('walk', 5);
             } else if (moveDirection == 3) {
-                player.animations.play('left', 5);
+                player.animations.play('walk', 5);
             } else {
                 player.animations.stop(null, true);
             }
@@ -334,7 +340,18 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
 
 
         function battle() {
-            console.log('battle')
+            console.log('battle');
+            console.log('battle');
+            inBattle = true;
+            $rootScope.moveNum = 30;
+            bee.y = player.y - 70;
+            bee.x = player.x;
+            player.body.velocity.setTo(0,0);
+            bee.animations.play('stillBee', 3);
+            player.animations.stop();
+            player.animations.play('still', 4);
+
+            game.world.scale.set(3,3);
         }
 
         function moveEveryone() {
