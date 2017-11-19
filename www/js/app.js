@@ -58,6 +58,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
             this.circles.collideWorldBounds = true;
             this.physics.enable(this.circles, Phaser.Physics.ARCADE);
 
+
+
             player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
             player.anchor.setTo(0.5, 0.5);
             player.scale.set(1.5);
@@ -121,6 +123,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
                 trees[i] = game.add.sprite(treePosX, treePosY, 'basicTree');
               }
             }
+            $rootScope.level = 1;
+            $rootScope.stepsToNextLevel = 10000;
+            stepsText = game.add.text(game.world.centerX, game.world.centerY, 'Steps to next level: ' + $rootScope.stepsToNextLevel);
+            stepsText.fixedToCamera = true;
+            stepsText.cameraOffset.setTo(0, 0);
+
         }
 
         function update() {
@@ -165,6 +173,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
                 $ionicLoading.hide()
                 $rootScope.thespeed = $rootScope.totalSpeed * 1000000
                 game.physics.arcade.moveToXY(player, clickX, clickY, $rootScope.thespeed);
+                if ($rootScope.totalSpeed >= 0){
+                  $rootScope.stepsToNextLevel -= $rootScope.totalSpeed;
+                }
+                if ($rootScope.stepsToNextLevel <= 0){
+                  //Progress level
+                  $rootScopelevel += 1;
+                  $rootScope.stepsToNextLevel = 10000 * level;
+                }
+                stepsText.setText('Steps to next level: ' + $rootScope.stepsToNextLevel);
               }
 
               if (this.physics.arcade.overlap(player, bee)) {
@@ -215,7 +232,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
 
                 var distX = clickX - player.position.x;
                 var distY = clickY - player.position.y;
+                if (distX > 0) {
+                    moveDirection = 1;
 
+                    // player.x = player.x + Math.abs(position.coords.latitude) / 100;
+                    // player.y = player.y + Math.abs(position.coords.latitude) / 100;
+
+                } else {
+                    moveDirection = 3;
+                }/*
                 // moving left or right
                 if (Math.abs(distX) > Math.abs(distY)) {
                     if (distX > 0) {
@@ -233,7 +258,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
                     } else {
                         moveDirection = 0;
                     }
-                }
+                }*/
 
             }
 
@@ -285,7 +310,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
 
         function render() {
             // game.debug.cameraInfo(game.camera, 32, 32);
-
             game.debug.text("Player Speed: " + $rootScope.thespeed, 32, 40, '#C91F37');
 
             game.debug.text("Core Speed: " + $rootScope.totalSpeed, 32, 60, '#C91F37');
@@ -314,7 +338,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
         }
 
         function moveEveryone() {
-            $rootScope.moveNum = Math.floor(Math.random() * (5 - 1) + 1);
+            $rootScope.moveNum = Math.floor(Math.random() * (3 - 1) + 1);
             setTimeout(moveEveryone, 3000);
         }
 
