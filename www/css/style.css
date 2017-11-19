@@ -1,3 +1,7 @@
 .adminpop .popup-body{
   height: 300px !important
 }
+
+.adminpops .popup-buttons{
+  display: none;
+}
