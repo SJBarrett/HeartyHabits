@@ -2,132 +2,36 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
+angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
 
-<<<<<<< HEAD
-.run(function($ionicPlatform, $rootScope, $ionicPopup, $geolocation, $ionicLoading) {
+.run(function($ionicPlatform, $rootScope, $ionicPopup, $geolocation, $ionicLoading, $firebaseObject, $cordovaBarcodeScanner) {
     $ionicPlatform.ready(function() {
-=======
-.run(function($ionicPlatform, $rootScope, $ionicPopup, $geolocation, $firebaseObject) {
-  $ionicPlatform.ready(function() {
 
-    // Set up database connection
-    var config = {
-     apiKey: "AIzaSyBWc3hKNxyfjQd59up3GtAxVe6etF4XZAU",
-     authDomain: "hearty-bf306.firebaseapp.com",
-     databaseURL: "https://hearty-bf306.firebaseio.com",
-     projectId: "hearty-bf306",
-     storageBucket: "hearty-bf306.appspot.com",
-     messagingSenderId: "1015399047405"
-    };
-    firebase.initializeApp(config);
-    var ref = firebase.database().ref();
-    $rootScope.data = $firebaseObject(ref);
-    /*  Print out database info to console Log
-    $rootScope.data.$loaded().then(function() {
-      console.log($rootScope.data);
-      }).catch(function(err) {
-        console.error(err);
-      });
-      */
-    scaleRatio = window.devicePixelRatio / 3;
+      var config = {
+       apiKey: "AIzaSyBWc3hKNxyfjQd59up3GtAxVe6etF4XZAU",
+       authDomain: "hearty-bf306.firebaseapp.com",
+       databaseURL: "https://hearty-bf306.firebaseio.com",
+       projectId: "hearty-bf306",
+       storageBucket: "hearty-bf306.appspot.com",
+       messagingSenderId: "1015399047405"
+      };
 
-    //Create a new game instance and assign it to the 'gameArea' div
-    var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.CANVAS, 'gameArea', { preload: preload, create: create, update: update, render: render });
+      firebase.initializeApp(config);
 
-    // var game = new Phaser.Game(window.innerWidth*window.devicePixelRatio, (window.innerHeight*window.devicePixelRatio) - 45 * window.devicePixelRatio, Phaser.CANVAS, 'gameArea', { preload: preload, create: create, update: update, render: render });
+      var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.CANVAS, 'gameArea', { preload: preload, create: create, update: update, render: render });
 
-    function preload() {
+      function preload() {
+          game.load.image('background','img/grass.png');
+          game.load.image('shrub', 'img/shrub.png');
+          game.load.image('pineTree','img/tree1.png');
+          game.load.image('palmTree', 'img/tree2.png');
+          game.load.image('basicTree', 'img/tree3.png');
+          this.load.image('heart', 'img/heart.png');
 
-        game.load.image('background','img/grass.png');
-        game.load.image('shrub', 'img/shrub.png');
-        game.load.image('pineTree','img/tree1.png');
-        game.load.image('palmTree', 'img/tree2.png');
-        game.load.image('basicTree', 'img/tree3.png');
-        // game.load.image('player','assets/sprites/phaser-dude.png');
-
-        this.load.spritesheet('gameSprite', 'img/roguelikeSheet_transparent.png', 16, 16, 1736, 0, 1);
-        this.load.spritesheet('player', 'img/george.png', 48, 48, 16);
-        this.load.spritesheet('bee', 'img/bee.png', 60, 65, 11);
-    }
-
-    var player;
-    var cursors;
-    var clickX;
-    var clickY;
-    var moveDirection; // 0 up, 1 right, 2 down, 3 left
->>>>>>> 8a784c87b7fcd81a83f8662f27bae151ee8417c8
-
-        var config = {
-            apiKey: "AIzaSyBWc3hKNxyfjQd59up3GtAxVe6etF4XZAU",
-            authDomain: "hearty-bf306.firebaseapp.com",
-            databaseURL: "https://hearty-bf306.firebaseio.com",
-            projectId: "hearty-bf306",
-            storageBucket: "hearty-bf306.appspot.com",
-            messagingSenderId: "1015399047405"
-        };
-
-        firebase.initializeApp(config);
-
-<<<<<<< HEAD
-        scaleRatio = window.devicePixelRatio / 3;
-=======
-        /*
-        var test = game.add.sprite(game.world.centerX - 100,game.world.centerY - 100, 'shrub');
-        var test2 = game.add.sprite(game.world.centerX + 100,game.world.centerY + 100, 'pineTree');
-        var test3 = game.add.sprite(game.world.centerX - 100,game.world.centerY + 100, 'palmTree');
-        var test3 = game.add.sprite(game.world.centerX + 100,game.world.centerY - 100, 'basicTree');
-        */
->>>>>>> 8a784c87b7fcd81a83f8662f27bae151ee8417c8
-
-        //Create a new game instance and assign it to the 'gameArea' div
-        var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.CANVAS, 'gameArea', {
-            preload: preload,
-            create: create,
-            update: update,
-            render: render
-        });
-
-
-        randomBeePosX = Math.random() * (game.world.centerX + 300 - (game.world.centerX-300)) + (game.world.centerX-300);
-        randomBeePosY = Math.random() * (game.world.centerY + 300 - (game.world.centerY-300)) + (game.world.centerY-300);
-        function preload() {
-
-            game.load.image('background', 'img/grass.png');
-            // game.load.image('player','assets/sprites/phaser-dude.png');
-
-            this.load.spritesheet('gameSprite', 'img/roguelikeSheet_transparent.png', 16, 16, 1736, 0, 1);
-            this.load.spritesheet('player', 'img/george.png', 48, 48, 16);
-            this.load.spritesheet('bee', 'img/bee.png', 60, 65, 11);
-
-            this.load.image('heart', 'img/heart.png');
+          this.load.spritesheet('gameSprite', 'img/roguelikeSheet_transparent.png', 16, 16, 1736, 0, 1);
+          this.load.spritesheet('player', 'img/george.png', 48, 48, 16);
+          this.load.spritesheet('bee', 'img/bee.png', 60, 65, 11);
         }
-
-        var trees = [];
-        for ( i = 0; i < 10; i++){
-          treePosX = Math.random() * (game.world.centerX + 500 - (game.world.centerX - 500)) + (game.world.centerX - 500);
-          treePosY = Math.random() * (game.world.centerY + 500 - (game.world.centerY - 500)) + (game.world.centerY - 500);
-          type = Math.floor(Math.random() * 4);
-          if (type == 0){
-            trees[i] = game.add.sprite(treePosX, treePosY, 'shrub');
-          } else if (type == 1){
-            trees[i] = game.add.sprite(treePosX, treePosY, 'pineTree');
-          } else if (type == 2){
-            trees[i] = game.add.sprite(treePosX, treePosY, 'palmTree');
-          } else {
-            trees[i] = game.add.sprite(treePosX, treePosY, 'basicTree');
-          }
-        }
-
-        game.physics.arcade.enable(player);
-        player.body.fixedRotation = true;
-        cursors = game.input.keyboard.createCursorKeys();
-        //  Notice that the sprite doesn't have any momentum at all,
-        //  it's all just set by the camera follow type.
-        //  0.1 is the amount of linear interpolation to use.
-        //  The smaller the value, the smooth the camera (and the longer it takes to catch up)
-        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
-
 
         var player;
         var cursors;
@@ -156,25 +60,29 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
 
             player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
             player.anchor.setTo(0.5, 0.5);
+            player.scale.set(1.5);
             player.enableBody = true;
             player.collideWorldBounds = true;
             this.physics.enable(player, Phaser.Physics.ARCADE);
 
-            heart = this.add.image(0, 0, 'heart');
+            this.heart = this.add.image(0, 0, 'heart');
 
-            heart.x = this.game.width + 5;
-            heart.y = 300;
-            heart.height = 200;
-            heart.width = 130;
-            heart.fixedToCamera = true;
-            heart.bringToTop()
-
+            this.heart.x = 150;
+            this.heart.y = this.game.height - 150;
+            this.heart.height = 100;
+            this.heart.width = 80;
+            this.heart.fixedToCamera = true;
+            this.heart.bringToTop();
+            this.heart.anchor.setTo(0.5, 0.5);
+            this.heart.inputEnabled = true;
+            this.heart.events.onInputDown.add(pressCompass, this);
 
             randomBeePosX = Math.random() * (game.world.centerX + 300 - (game.world.centerX - 300)) + (game.world.centerX - 300);
             randomBeePosY = Math.random() * (game.world.centerY + 300 - (game.world.centerY - 300)) + (game.world.centerY - 300);
 
             bee = game.add.sprite(randomBeePosX, randomBeePosY, 'bee');
             bee.anchor.setTo(0.5, 0.5);
+            bee.scale.set(1.5);
             bee.enableBody = true;
             bee.collideWorldBounds = true;
             this.physics.enable(bee, Phaser.Physics.ARCADE);
@@ -197,42 +105,67 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
 
             moveEveryone();
             $rootScope.canbattle = 1
+
+            var trees = [];
+            for ( i = 0; i < 10; i++){
+              treePosX = Math.random() * (game.world.centerX + 500 - (game.world.centerX - 500)) + (game.world.centerX - 500);
+              treePosY = Math.random() * (game.world.centerY + 500 - (game.world.centerY - 500)) + (game.world.centerY - 500);
+              type = Math.floor(Math.random() * 4);
+              if (type == 0){
+                trees[i] = game.add.sprite(treePosX, treePosY, 'shrub');
+              } else if (type == 1){
+                trees[i] = game.add.sprite(treePosX, treePosY, 'pineTree');
+              } else if (type == 2){
+                trees[i] = game.add.sprite(treePosX, treePosY, 'palmTree');
+              } else {
+                trees[i] = game.add.sprite(treePosX, treePosY, 'basicTree');
+              }
+            }
         }
 
         function update() {
             game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
             $geolocation.getCurrentPosition().then(function(position) {
-                $rootScope.posA = Math.abs(position.coords.latitude)
-                $rootScope.posB = Math.abs(position.coords.longitude)
 
-                setTimeout(function() {
-                  this.lat1 = $rootScope.posA
-                  this.lng1 = $rootScope.posB
-                }, 100);
+                  setTimeout(function() {
+                    this.lat1 = position.coords.latitude
+                    this.lng1 = position.coords.longitude
+                  }, 2000);
 
-                  this.lat2 = $rootScope.posA
-                  this.lng2 = $rootScope.posB
+                  this.lat2 = position.coords.latitude
+                  this.lng2 = position.coords.longitude
 
-                  $rootScope.Latitude = Math.abs(this.lat1 - this.lat2 + 0.05)
+                  $rootScope.Latitude = Math.abs(this.lat1 - this.lat2)
+                  $rootScope.Longitude = Math.abs(this.lng1 - this.lng2)
+
+                  $rootScope.totalSpeed = Math.sqrt(($rootScope.Latitude * $rootScope.Latitude) + ($rootScope.Longitude * $rootScope.Longitude))
+
                   console.log("FirstLat: " + $rootScope.Latitude)
+                  console.log("FirstLat: " + $rootScope.Longitude)
+
+                  console.log("TotalSpeed: " + $rootScope.totalSpeed)
               });
 
-              if(!$rootScope.Latitude){
-                  $rootScope.thespeed = 0
-                  player.body.velocity.setTo(0, 0);
-                  player.animations.stop(null, true);
+              // if(!$rootScope.totalSpeed){
+              //     $rootScope.thespeed = 0
+              //     player.body.velocity.setTo(0, 0);
+              //     player.animations.stop(null, true);
+              //
+              //     $ionicLoading.show({
+              //       template: 'Loading...'
+              //     })
+              // }else{
 
-                  $ionicLoading.show({
-                    template: 'Loading...'
-                  })
+              if(($rootScope.totalSpeed * 1000000) < 10){
+                $rootScope.thespeed = 0
+                player.body.velocity.setTo(0, 0);
+                player.animations.stop(null, true);
               }else{
                 $ionicLoading.hide()
-                $rootScope.thespeed = $rootScope.Latitude * 100
+                $rootScope.thespeed = $rootScope.totalSpeed * 1000000
                 game.physics.arcade.moveToXY(player, clickX, clickY, $rootScope.thespeed);
               }
-
-              console.log($rootScope.thespeed)
 
               if (this.physics.arcade.overlap(player, bee)) {
                   if ($rootScope.canbattle == 1) {
@@ -353,8 +286,26 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
         function render() {
             // game.debug.cameraInfo(game.camera, 32, 32);
 
-            game.debug.text("Player Speed: " + $rootScope.thespeed, 32, 40);
+            game.debug.text("Player Speed: " + $rootScope.thespeed, 32, 40, '#C91F37');
 
+            game.debug.text("Core Speed: " + $rootScope.totalSpeed, 32, 60, '#C91F37');
+            game.debug.text("Latitude: " + $rootScope.Latitude, 32, 80, '#C91F37');
+            game.debug.text("Longitude: " + $rootScope.Longitude, 32, 100, '#C91F37');
+
+        }
+
+        function pressCompass() {
+          cordova.plugins.barcodeScanner.scan(
+            function (result) {
+                alert("We got a barcode\n" +
+                      "Result: " + result.text + "\n" +
+                      "Format: " + result.format + "\n" +
+                      "Cancelled: " + result.cancelled);
+            },
+            function (error) {
+                alert("Scanning failed: " + error);
+            }
+         );
         }
 
 
