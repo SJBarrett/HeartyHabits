@@ -132,9 +132,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
             // }
             $rootScope.level = 1;
             $rootScope.stepsToNextLevel = 10000;
-            stepsText = game.add.text(game.world.centerX, game.world.centerY, 'Steps to next level: ' + $rootScope.stepsToNextLevel);
+            stepsText = game.add.text(game.world.centerX, game.world.centerY, 'Steps to next level: ' + $rootScope.stepsToNextLevel,{ font: "30px Arial", fill: "#000000", align: "center" });
             stepsText.fixedToCamera = true;
-            stepsText.cameraOffset.setTo(0, 0);
+            stepsText.cameraOffset.setTo(200, 0);
 
             rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
 
@@ -302,7 +302,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
 
 
         function battle() {
+          //init battle screen
             inBattle = true;
+            stepsText.alpha = 0;
             $rootScope.moveNum = 30;
             bee.y = player.y - 70;
             bee.x = player.x;
@@ -312,6 +314,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
             player.animations.play('still', 4);
 
             game.world.scale.set(3,3);
+            // battle
+
+            // end of battle revert view
+            stepsText.alpha = 1;
         }
 
         function moveEveryone() {
