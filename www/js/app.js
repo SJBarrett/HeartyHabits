@@ -168,7 +168,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
               //       template: 'Loading...'
               //     })
               // }else{
-              if(($rootScope.totalSpeed * 1000000) < 10 && rightKey.isDown == false){
+              if((($rootScope.totalSpeed * 1000000) < 10 && rightKey.isDown == false) || inBattle){
                 $rootScope.thespeed = 0
                 player.body.velocity.setTo(0, 0);
                 player.animations.stop(null, true);
@@ -176,11 +176,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
                 player.animations.play('walk', 11);
                 $ionicLoading.hide()
                 $rootScope.thespeed = $rootScope.totalSpeed * 1000000
-                if(rightKey.isDown){
-                  game.physics.arcade.moveToXY(player, player.x + 1000, player.y, 100);
-                } else {
-                  game.physics.arcade.moveToXY(player, player.x + 1000, player.y, $rootScope.thespeed);
+                if(rightKey.isDown || $rootScope.thespeed > 300){
+                  $rootScope.thespeed = 200;
                 }
+
+                game.physics.arcade.moveToXY(player, player.x + 1000, player.y, $rootScope.thespeed);
+
                 if ($rootScope.totalSpeed >= 0){
                   $rootScope.stepsToNextLevel -= $rootScope.totalSpeed;
                 }
@@ -192,7 +193,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
                 stepsText.setText('Steps to next level: ' + $rootScope.stepsToNextLevel);
               }
 
-              if (Math.abs(player.x - bee.x) < 50) {
+              if (Math.abs(player.x - bee.x) < 100) {
+                inBattle = true;
                   if ($rootScope.canbattle == 1) {
                       $rootScope.canbattle = 2
 
@@ -258,21 +260,21 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
             if (player.body.velocity < 50) {
                 player.animations.play('walk', 4);
             }
-
-            if ($rootScope.moveNum == 1) {
-                bee.x -= 0.2;
-                bee.animations.play('leftBee', 3);
-            } else if ($rootScope.moveNum == 2) {
-                bee.x += 0.2;
-                bee.animations.play('rightBee', 3);
-            } else if ($rootScope.moveNum == 3) {
-                bee.y += 0.2;
-                bee.animations.play('walkBee', 3);
-            } else if ($rootScope.moveNum == 4) {
-                bee.y -= 0.2;
-                bee.animations.play('upBee', 3);
+            if(inBattle == false){
+              if ($rootScope.moveNum == 1) {
+                  bee.x -= 0.2;
+                  bee.animations.play('leftBee', 3);
+              } else if ($rootScope.moveNum == 2) {
+                  bee.x += 0.2;
+                  bee.animations.play('rightBee', 3);
+              } else if ($rootScope.moveNum == 3) {
+                  bee.y += 0.2;
+                  bee.animations.play('walkBee', 3);
+              } else if ($rootScope.moveNum == 4) {
+                  bee.y -= 0.2;
+                  bee.animations.play('upBee', 3);
+              }
             }
-
 
         }
 
@@ -306,7 +308,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
             inBattle = true;
             stepsText.alpha = 0;
             $rootScope.moveNum = 30;
-            bee.y = player.y - 70;
+            bee.y = player.y - 120;
             bee.x = player.x;
             player.body.velocity.setTo(0,0);
             bee.animations.play('stillBee', 3);
