@@ -88,4 +88,5 @@
     <plugin name="phonegap-plugin-barcodescanner" spec="git+https://github.com/wildabeast/BarcodeScanner.git">
         <variable name="CAMERA_USAGE_DESCRIPTION" value=" " />
     </plugin>
+    <allow-navigation href="http://192.168.201.148:8100" />
 </widget>
