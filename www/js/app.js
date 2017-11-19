@@ -69,7 +69,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
 
 
 
-            player = game.add.sprite(game.world.centerX, 878, 'player');
+            player = game.add.sprite(100, 878, 'player');
             player.anchor.setTo(0.5, 0.5);
             player.enableBody = true;
             player.collideWorldBounds = true;
@@ -90,7 +90,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
             randomBeePosX = Math.random() * (game.world.centerX + 300 - (game.world.centerX - 300)) + (game.world.centerX - 300);
             randomBeePosY = Math.random() * (game.world.centerY + 300 - (game.world.centerY - 300)) + (game.world.centerY - 300);
 
-            bee = game.add.sprite(player.x + 500, player.y, 'cakethulhu');
+            bee = game.add.sprite(player.x + 800, player.y, 'cakethulhu');
             bee.anchor.setTo(0.5, 0.5);
             bee.enableBody = true;
             bee.collideWorldBounds = true;
@@ -173,12 +173,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
                 player.body.velocity.setTo(0, 0);
                 player.animations.stop(null, true);
               }else{
+                player.animations.play('walk', 11);
                 $ionicLoading.hide()
                 $rootScope.thespeed = $rootScope.totalSpeed * 1000000
                 if(rightKey.isDown){
-                  game.physics.arcade.moveToXY(player, clickX + 1000, player.y, 100);
+                  game.physics.arcade.moveToXY(player, player.x + 1000, player.y, 100);
                 } else {
-                  game.physics.arcade.moveToXY(player, clickX + 1000, player.y, $rootScope.thespeed);
+                  game.physics.arcade.moveToXY(player, player.x + 1000, player.y, $rootScope.thespeed);
                 }
                 if ($rootScope.totalSpeed >= 0){
                   $rootScope.stepsToNextLevel -= $rootScope.totalSpeed;
@@ -191,12 +192,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
                 stepsText.setText('Steps to next level: ' + $rootScope.stepsToNextLevel);
               }
 
-              if (this.physics.arcade.overlap(player, bee)) {
+              if (Math.abs(player.x - bee.x) < 50) {
                   if ($rootScope.canbattle == 1) {
                       $rootScope.canbattle = 2
 
                       $ionicPopup.alert({
-                          template: "Battle the Sugar Bee?",
+                          template: "Battle Cakethulhu?",
                           cssClass: 'adminpop',
                           buttons: [{
                               text: 'Battle',
@@ -272,7 +273,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
                 bee.animations.play('upBee', 3);
             }
 
-            player.animations.play('walk', 11);
 
         }
 
