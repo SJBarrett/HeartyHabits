@@ -42,6 +42,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
     var clickY;
     var moveDirection; // 0 up, 1 right, 2 down, 3 left
 
+    var inBattle = false;
+
     function create() {
 
         game.add.tileSprite(0, 0, 1920, 1920, 'background');
@@ -64,15 +66,17 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
         bee.collideWorldBounds = true;
         this.physics.enable(bee, Phaser.Physics.ARCADE);
 
-        this.walk = player.animations.add('walk', [0, 4, 8, 12])
-        this.left = player.animations.add('left', [1, 5, 9, 13])
-        this.up = player.animations.add('up', [2, 6, 10, 14])
-        this.right = player.animations.add('right', [3, 7, 11, 15])
+        this.walk = player.animations.add('walk', [0, 4, 8, 12]);
+        this.left = player.animations.add('left', [1, 5, 9, 13]);
+        this.up = player.animations.add('up', [2, 6, 10, 14]);
+        this.right = player.animations.add('right', [3, 7, 11, 15]);
+        this.still = player.animations.add('still', [2]);
 
-        this.walkBee = bee.animations.add('walkBee', [0, 1, 2])
-        this.leftBee = bee.animations.add('leftBee', [3, 4, 5])
-        this.rightBee = bee.animations.add('rightBee', [6, 7, 8])
-        this.upBee = bee.animations.add('upBee', [9, 10, 11])
+        this.walkBee = bee.animations.add('walkBee', [0, 1, 2]);
+        this.leftBee = bee.animations.add('leftBee', [3, 4, 5]);
+        this.rightBee = bee.animations.add('rightBee', [6, 7, 8]);
+        this.upBee = bee.animations.add('upBee', [9, 10, 11]);
+        this.stillBee = bee.animations.add('stillBee', [0]);
 
         game.physics.arcade.enable(player);
         player.body.fixedRotation = true;
@@ -126,7 +130,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
 
       }
 
-      if(game.input.activePointer.isDown){
+      if(game.input.activePointer.isDown && inBattle == false){
         clickX = game.input.activePointer.positionDown.x + game.camera.x;
         clickY = game.input.activePointer.positionDown.y + game.camera.y;
         game.physics.arcade.moveToXY(player, clickX, clickY, 100);
@@ -160,21 +164,21 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
       if(player.body.velocity < 50){
         player.animations.play('walk', 4);
       }
-
-      if($rootScope.moveNum == 1){
-        bee.x -= 0.2;
-        bee.animations.play('leftBee', 3);
-      }else if($rootScope.moveNum == 2){
-        bee.x += 0.2;
-        bee.animations.play('rightBee', 3);
-      }else if($rootScope.moveNum == 3){
-        bee.y += 0.2;
-        bee.animations.play('walkBee', 3);
-      }else if($rootScope.moveNum == 4){
-        bee.y -= 0.2;
-        bee.animations.play('upBee', 3);
+      if(inBattle == false){
+        if($rootScope.moveNum == 1){
+          bee.x -= 0.2;
+          bee.animations.play('leftBee', 3);
+        }else if($rootScope.moveNum == 2){
+          bee.x += 0.2;
+          bee.animations.play('rightBee', 3);
+        }else if($rootScope.moveNum == 3){
+          bee.y += 0.2;
+          bee.animations.play('walkBee', 3);
+        }else if($rootScope.moveNum == 4){
+          bee.y -= 0.2;
+          bee.animations.play('upBee', 3);
+        }
       }
-
       if(moveDirection == 0){
         player.animations.play('up', 5);
       } else if (moveDirection == 1) {
@@ -194,7 +198,26 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
     }
 
     function battle() {
-      console.log('battle')
+      console.log('battle');
+      inBattle = true;
+      $rootScope.moveNum = 30;
+      bee.y = player.y - 70;
+      bee.x = player.x;
+      player.body.velocity.setTo(0,0);
+      bee.animations.play('stillBee', 3);
+      player.animations.stop();
+      player.animations.play('still', 4);
+
+      // Build the buttons
+      attackButton = game.add.button(game.world.centerX, game.world.centerY,
+        'button', attackAction, this, 1, 0, 2);
+      attackButton.anchor.setTo(0.5,0.5);
+
+      game.world.scale.set(3,3);
+    }
+
+    function attackAction(){
+      button.setFrames()
     }
 
     function moveEveryone(){
