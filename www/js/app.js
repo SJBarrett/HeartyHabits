@@ -211,11 +211,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation'])
       player.animations.stop();
       player.animations.play('still', 4);
 
-      // Build the buttons
-      attackButton = game.add.button(game.world.centerX, game.world.centerY,
-        'button', attackAction, this, 1, 0, 2);
-      attackButton.anchor.setTo(0.5,0.5);
-
       game.world.scale.set(3,3);
     }
 
