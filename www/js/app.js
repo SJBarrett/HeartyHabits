@@ -75,17 +75,17 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
             player.collideWorldBounds = true;
             this.physics.enable(player, Phaser.Physics.ARCADE);
 
-            this.heart = this.add.image(0, 0, 'heart');
+            heartScanner = this.add.image(0, 0, 'heart');
 
-            this.heart.x = 150;
-            this.heart.y = this.game.height - 150;
-            this.heart.height = 100;
-            this.heart.width = 80;
-            this.heart.fixedToCamera = true;
-            this.heart.bringToTop();
-            this.heart.anchor.setTo(0.5, 0.5);
-            this.heart.inputEnabled = true;
-            this.heart.events.onInputDown.add(pressCompass, this);
+            heartScanner.x = 150;
+            heartScanner.y = this.game.height - 150;
+            heartScanner.height = 100;
+            heartScanner.width = 80;
+            heartScanner.fixedToCamera = true;
+            heartScanner.bringToTop();
+            heartScanner.anchor.setTo(0.5, 0.5);
+            heartScanner.inputEnabled = true;
+            heartScanner.events.onInputDown.add(pressCompass, this);
 
             randomBeePosX = Math.random() * (game.world.centerX + 300 - (game.world.centerX - 300)) + (game.world.centerX - 300);
             randomBeePosY = Math.random() * (game.world.centerY + 300 - (game.world.centerY - 300)) + (game.world.centerY - 300);
@@ -305,6 +305,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
           //init battle screen
             inBattle = true;
             stepsText.alpha = 0;
+            heartScanner.visability = 0;
             $rootScope.moveNum = 30;
             bee.y = player.y - 70;
             bee.x = player.x;
