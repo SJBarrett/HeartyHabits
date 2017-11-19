@@ -29,7 +29,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
           this.load.image('heart', 'img/heart.png');
 
           this.load.spritesheet('gameSprite', 'img/roguelikeSheet_transparent.png', 16, 16, 1736, 0, 1);
-          this.load.spritesheet('player', 'img/george.png', 48, 48, 16);
+          // this.load.spritesheet('player', 'img/george.png', 48, 48, 16);
           this.load.spritesheet('bee', 'img/bee.png', 60, 65, 11);
 
           this.load.spritesheet('cakethulhu', 'assets/Cakethulhu.png', 128, 141);
@@ -42,15 +42,16 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
         var clickX;
         var clickY;
         var moveDirection;
+        var rightKey;
 
         var inBattle = false;
 
         function create() {
 
-          game.add.tileSprite(0, 210, 5250, 1050, 'background');
+          game.add.tileSprite(0, 400, 5250, 1050, 'background');
           game.world.setBounds(0, 0, 5250, 1050);
           game.physics.startSystem(Phaser.Physics.ARCADE);
-          game.world.scale.setTo(0.5,0.5);
+          game.world.scale.setTo(1,1);
           game.stage.backgroundColor = "#87b5ff";
 
             this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -58,17 +59,17 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
             this.scale.maxHeight = this.game.height;
             this.scale.pageAlignHorizontally = true;
 
-            this.circles = game.add.graphics(game.world.centerX, game.world.centerY);
-            this.circles.beginFill(0xD24D57, 1);
-            this.circles.drawCircle(0, 0, 50);
-            this.circles.anchor.setTo(0.5, 0.5);
-            this.circles.enableBody = true;
-            this.circles.collideWorldBounds = true;
-            this.physics.enable(this.circles, Phaser.Physics.ARCADE);
+            // this.circles = game.add.graphics(game.world.centerX, game.world.centerY);
+            // this.circles.beginFill(0xD24D57, 1);
+            // this.circles.drawCircle(0, 0, 50);
+            // this.circles.anchor.setTo(0.5, 0.5);
+            // this.circles.enableBody = true;
+            // this.circles.collideWorldBounds = true;
+            // this.physics.enable(this.circles, Phaser.Physics.ARCADE);
 
 
 
-            player = game.add.sprite(game.world.centerX, 700, 'player');
+            player = game.add.sprite(game.world.centerX, 878, 'player');
             player.anchor.setTo(0.5, 0.5);
             player.enableBody = true;
             player.collideWorldBounds = true;
@@ -89,7 +90,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
             randomBeePosX = Math.random() * (game.world.centerX + 300 - (game.world.centerX - 300)) + (game.world.centerX - 300);
             randomBeePosY = Math.random() * (game.world.centerY + 300 - (game.world.centerY - 300)) + (game.world.centerY - 300);
 
-            bee = game.add.sprite(player.x + 200, player.y, 'cakethulhu');
+            bee = game.add.sprite(player.x + 500, player.y, 'cakethulhu');
             bee.anchor.setTo(0.5, 0.5);
             bee.enableBody = true;
             bee.collideWorldBounds = true;
@@ -114,26 +115,28 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
             moveEveryone();
             $rootScope.canbattle = 1
 
-            var trees = [];
-            for ( i = 0; i < 10; i++){
-              treePosX = Math.random() * (game.world.centerX + 500 - (game.world.centerX - 500)) + (game.world.centerX - 500);
-              treePosY = Math.random() * (game.world.centerY + 500 - (game.world.centerY - 500)) + (game.world.centerY - 500);
-              type = Math.floor(Math.random() * 4);
-              if (type == 0){
-                trees[i] = game.add.sprite(treePosX, treePosY, 'shrub');
-              } else if (type == 1){
-                trees[i] = game.add.sprite(treePosX, treePosY, 'pineTree');
-              } else if (type == 2){
-                trees[i] = game.add.sprite(treePosX, treePosY, 'palmTree');
-              } else {
-                trees[i] = game.add.sprite(treePosX, treePosY, 'basicTree');
-              }
-            }
+            // var trees = [];
+            // for ( i = 0; i < 10; i++){
+            //   treePosX = Math.random() * (game.world.centerX + 500 - (game.world.centerX - 500)) + (game.world.centerX - 500);
+            //   treePosY = Math.random() * (game.world.centerY + 500 - (game.world.centerY - 500)) + (game.world.centerY - 500);
+            //   type = Math.floor(Math.random() * 4);
+            //   if (type == 0){
+            //     trees[i] = game.add.sprite(treePosX, treePosY, 'shrub');
+            //   } else if (type == 1){
+            //     trees[i] = game.add.sprite(treePosX, treePosY, 'pineTree');
+            //   } else if (type == 2){
+            //     trees[i] = game.add.sprite(treePosX, treePosY, 'palmTree');
+            //   } else {
+            //     trees[i] = game.add.sprite(treePosX, treePosY, 'basicTree');
+            //   }
+            // }
             $rootScope.level = 1;
             $rootScope.stepsToNextLevel = 10000;
             stepsText = game.add.text(game.world.centerX, game.world.centerY, 'Steps to next level: ' + $rootScope.stepsToNextLevel);
             stepsText.fixedToCamera = true;
             stepsText.cameraOffset.setTo(0, 0);
+
+            rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
 
         }
 
@@ -154,11 +157,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
                   $rootScope.Longitude = Math.abs(this.lng1 - this.lng2)
 
                   $rootScope.totalSpeed = Math.sqrt(($rootScope.Latitude * $rootScope.Latitude) + ($rootScope.Longitude * $rootScope.Longitude))
-
-                  console.log("FirstLat: " + $rootScope.Latitude)
-                  console.log("FirstLat: " + $rootScope.Longitude)
-
-                  console.log("TotalSpeed: " + $rootScope.totalSpeed)
               });
 
               // if(!$rootScope.totalSpeed){
@@ -170,15 +168,18 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
               //       template: 'Loading...'
               //     })
               // }else{
-
-              if(($rootScope.totalSpeed * 1000000) < 10){
+              if(($rootScope.totalSpeed * 1000000) < 10 && rightKey.isDown == false){
                 $rootScope.thespeed = 0
                 player.body.velocity.setTo(0, 0);
                 player.animations.stop(null, true);
               }else{
                 $ionicLoading.hide()
                 $rootScope.thespeed = $rootScope.totalSpeed * 1000000
-                game.physics.arcade.moveToXY(player, clickX, clickY, $rootScope.thespeed);
+                if(rightKey.isDown){
+                  game.physics.arcade.moveToXY(player, clickX + 1000, player.y, 100);
+                } else {
+                  game.physics.arcade.moveToXY(player, clickX + 1000, player.y, $rootScope.thespeed);
+                }
                 if ($rootScope.totalSpeed >= 0){
                   $rootScope.stepsToNextLevel -= $rootScope.totalSpeed;
                 }
@@ -210,7 +211,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
                                   player.body.velocity.setTo(0, 0);
                                   player.animations.stop(null, true);
 
-                                  console.log("Your position :" + $rootScope.posA + ", " + $rootScope.posB);
 
                                   var corepop = $ionicPopup.alert({
                                       title: "Walk to continue",
@@ -234,38 +234,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
                 clickX = game.input.activePointer.positionDown.x + game.camera.x;
                 clickY = game.input.activePointer.positionDown.y + game.camera.y;
 
-                game.physics.arcade.moveToXY(this.circles, clickX, clickY, 700);
+                // game.physics.arcade.moveToXY(this.circles, clickX, clickY, 700);
 
                 var distX = clickX - player.position.x;
                 var distY = clickY - player.position.y;
-                if (distX > 0) {
-                    moveDirection = 1;
-
-                    // player.x = player.x + Math.abs(position.coords.latitude) / 100;
-                    // player.y = player.y + Math.abs(position.coords.latitude) / 100;
-
-                } else {
-                    moveDirection = 3;
-                }/*
-                // moving left or right
-                if (Math.abs(distX) > Math.abs(distY)) {
-                    if (distX > 0) {
-                        moveDirection = 1;
-
-                        // player.x = player.x + Math.abs(position.coords.latitude) / 100;
-                        // player.y = player.y + Math.abs(position.coords.latitude) / 100;
-
-                    } else {
-                        moveDirection = 3;
-                    }
-                } else {
-                    if (distY > 0) {
-                        moveDirection = 2;
-                    } else {
-                        moveDirection = 0;
-                    }
-                }*/
-
             }
 
             var distance = Math.sqrt((player.position.x - clickX) * (player.position.x - clickX) + (player.position.y - clickY) * (player.position.y - clickY));
@@ -275,11 +247,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
                 player.animations.stop(null, true);
             }
 
-            var cirdistance = Math.sqrt((this.circles.position.x - clickX) * (this.circles.position.x - clickX) + (this.circles.position.y - clickY) * (this.circles.position.y - clickY));
+            // var cirdistance = Math.sqrt((this.circles.position.x - clickX) * (this.circles.position.x - clickX) + (this.circles.position.y - clickY) * (this.circles.position.y - clickY));
 
-            if (cirdistance < 10) {
-                this.circles.body.velocity.setTo(0, 0);
-            }
+            // if (cirdistance < 10) {
+            //     this.circles.body.velocity.setTo(0, 0);
+            // }
 
 
             if (player.body.velocity < 50) {
@@ -300,17 +272,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
                 bee.animations.play('upBee', 3);
             }
 
-            if (moveDirection == 0) {
-                player.animations.play('walk', 5);
-            } else if (moveDirection == 1) {
-                player.animations.play('walk', 5);
-            } else if (moveDirection == 2) {
-                player.animations.play('walk', 5);
-            } else if (moveDirection == 3) {
-                player.animations.play('walk', 5);
-            } else {
-                player.animations.stop(null, true);
-            }
+            player.animations.play('walk', 11);
 
         }
 
@@ -340,8 +302,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngGeolocation', 'ngCordova'])
 
 
         function battle() {
-            console.log('battle');
-            console.log('battle');
             inBattle = true;
             $rootScope.moveNum = 30;
             bee.y = player.y - 70;
